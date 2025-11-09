@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://csqnlq6uhnyfb"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_6ioqs"]
+[ext_resource type="Script" uid="uid://ce33dwxiruv7b" path="res://player.gd" id="1_6ioqs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i1j2i"]
 size = Vector2(34, 32.5)
@@ -15,3 +15,6 @@ offset_bottom = 40.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(20, 20)
 shape = SubResource("RectangleShape2D_i1j2i")
+
+[node name="Trail" type="Line2D" parent="."]
+top_level = true
