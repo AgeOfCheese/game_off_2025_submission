@@ -8,6 +8,7 @@ var freq = 2
 var amp = 2
 var inv = 1
 
+signal cooked
 
 func _ready() -> void:
 	start_time = Time.get_ticks_msec()/500.0
@@ -38,19 +39,28 @@ func _physics_process(delta: float) -> void:
 			
 	velocity.y*=-1
 	move_and_collide(velocity)
+	var collision_count = get_slide_collision_count()
+	for i in range(collision_count):
+		var collision = get_slide_collision(i)
+		if collision is TileMapLayer:
+			print("hello")
 	
 func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("sin_wave"):
+		start_time = Time.get_ticks_msec()/500.0
 		current_wave = 1
 		base_y = -999999
 	if event.is_action_pressed("trig_wave"):
+		start_time = Time.get_ticks_msec()/500.0
 		current_wave = 2
 		base_y = -999999
 	if event.is_action_pressed("square_wave"):
+		start_time = Time.get_ticks_msec()/500.0
 		current_wave = 3
 		base_y = -999999
 	if event.is_action_pressed("saw_wave"):
+		start_time = Time.get_ticks_msec()/500.0
 		current_wave = 4
 		base_y = -999999
 	if event.is_action_pressed("amp_up"):
