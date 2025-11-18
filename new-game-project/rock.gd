@@ -18,6 +18,7 @@ var m
 var vel
 var vy
 var y
+var lines
 
 func setup(r):
 	rad = r
@@ -27,6 +28,7 @@ func setup(r):
 	curforce = 0
 	m = density * r * r
 	flying = false
+	lines = []
 	
 func _process(dt):
 	if flying:
@@ -53,7 +55,7 @@ func _process(dt):
 				else:
 					bypass = true
 			if picked != null:
-				position = picked[0] + mpos - picked[1]
+				moveto(picked[0] + mpos - picked[1])
 		else:
 			bypass = false
 			if not (picked == null):
@@ -75,3 +77,19 @@ func end_launch():
 
 func updatesize():
 	scale = Vector2(rad, rad) * k * hcam / (hcam - y)
+	
+func moveto(newpos):
+	var movevec = newpos - position
+	var p1 = position
+	var radvec = movevec.normalized() * rad
+	var p2 = p1 + movevec + radvec
+	for line in lines:
+		var inter = Geometry2D.segment_intersects_segment(p1, p2, line[0], line[1])
+		if inter != null:
+			var unit = (line[1] - line[0]).normalized()
+			var perp = Vector2(-unit.y, unit.x)
+			if perp.dot(movevec) > 0:
+				perp = -perp
+			position = inter + perp * rad
+			return
+	position = newpos
