@@ -35,17 +35,81 @@ func _draw():
 				vibtick = 0.5
 	if side == 0:
 		if vibtick <= 0:
-			draw_line($a1.position, $a2.position, Color(0, 0, 0))
+			draw_line($a1.position, $a2.position, Color(0, 0, 0), 3)
 		else:
 			#anim
 			vibtick -= curdt
 	else:
-		
-		pass
+		var tanp1 = tanpoints($a1.position, rockpos, rockrad)
+		var tanp2 = tanpoints($a2.position, rockpos, rockrad)
+		var p1
+		var p2
+		if side == 1:
 			
+			var p1a1 = vecang(tanp1[0] - $a1.position)
+			var p1a2 = vecang(tanp1[1] - $a1.position)
+			var diff = p1a2 - p1a1
+			if diff > 0:
+				if diff < PI:
+					p1 = tanp1[1]
+				else:
+					p1 = tanp1[0]
+			else:
+				if diff > -PI:
+					p1 = tanp1[0]
+				else:
+					p1 = tanp1[1]
+					
+			var p2a1 = vecang(tanp2[0] - $a2.position)
+			var p2a2 = vecang(tanp2[1] - $a2.position)
+			diff = p2a2 - p2a1
+			if diff > 0:
+				if diff < PI:
+					p2 = tanp2[0]
+				else:
+					p2 = tanp2[1]
+			else:
+				if diff > -PI:
+					p2 = tanp2[1]
+				else:
+					p2 = tanp2[0]
+		
+		else:
+			
+			var p1a1 = vecang(tanp1[0] - $a1.position)
+			var p1a2 = vecang(tanp1[1] - $a1.position)
+			var diff = p1a2 - p1a1
+			if diff > 0:
+				if diff < PI:
+					p1 = tanp1[0]
+				else:
+					p1 = tanp1[1]
+			else:
+				if diff > -PI:
+					p1 = tanp1[1]
+				else:
+					p1 = tanp1[0]
+					
+			var p2a1 = vecang(tanp2[0] - $a2.position)
+			var p2a2 = vecang(tanp2[1] - $a2.position)
+			diff = p2a2 - p2a1
+			if diff > 0:
+				if diff < PI:
+					p2 = tanp2[1]
+				else:
+					p2 = tanp2[0]
+			else:
+				if diff > -PI:
+					p2 = tanp2[0]
+				else:
+					p2 = tanp2[1]
+		
+		draw_line($a1.position, p1, Color(0, 0, 0), 3)
+		draw_line($a2.position, p2, Color(0, 0, 0), 3)
+
 func update_rock(r):
 	rockpos = r.position
-	rockrad = r.rad
+	rockrad = r.rad * 0.9
 	
 func tanpoints(p1, p2, r):
 	var l = p1.distance_to(p2)
@@ -55,5 +119,6 @@ func tanpoints(p1, p2, r):
 	var a1 = startang + ang
 	var a2 = startang - ang
 	return [p2 + Vector2(cos(a1), sin(a1)) * r, p2 + Vector2(cos(a2), sin(a2)) * r]
-		
-	
+
+func vecang(v):
+	return atan2(v.y, v.x)
