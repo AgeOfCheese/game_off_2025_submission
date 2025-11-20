@@ -13,5 +13,13 @@ func _ready():
 	add_child(r1)
 	
 func _process(dt):
+	#print(r1.y)
 	sling.update_rock(r1)
-	
+	if not r1.is_picked():
+		var f = sling.get_force()
+		if f.length() > 0.001:
+			if not r1.flying:
+				r1.start_launch()
+		r1.apply_force(f)
+	if r1.y < 0:
+		r1.end_launch()

@@ -5,9 +5,10 @@ class_name Rock
 const k = 0.01
 const kpick = 0.011
 const density = 10
-const gravity = 10
+const gravity = 0.5
 const theta = 45
-const hcam = 10
+const hcam = 500
+const iters = 20
 
 var rad
 var picked
@@ -28,17 +29,27 @@ func setup(r):
 	curforce = 0
 	m = density * r * r
 	flying = false
+	vel = Vector2.ZERO
+	vy = 0
+	y = 0
 	lines = []
 	
 func _process(dt):
 	if flying:
-		var a = curforce / m
-		var ay = a.length() * sin(deg_to_rad(theta))
-		var ax = a * cos(deg_to_rad(theta))
-		vel += ax * dt
-		vy += ay * dt
-		position += vel * dt
-		y += vy * dt
+		var ax
+		var ay
+		if curforce.length() < 0.001:
+			ay = -gravity
+			ax = Vector2.ZERO
+		else:
+			var a = curforce / m
+			ay = a.length() * sin(deg_to_rad(theta))
+			ax = a * cos(deg_to_rad(theta))
+		for i in range(iters):
+			vel += ax * dt
+			vy += ay * dt
+			position += vel * dt
+			y += vy * dt
 		updatesize()
 	else:
 		vel = Vector2.ZERO
@@ -93,3 +104,6 @@ func moveto(newpos):
 			position = inter + perp * rad
 			return
 	position = newpos
+
+func is_picked():
+	return picked

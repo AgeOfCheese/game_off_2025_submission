@@ -1,10 +1,17 @@
 extends Node2D
 
+var l0
+const k = 100
+
 var rockpos = null
 var rockrad = 10
 var vibtick = 0
 var curdt
 var side = 0
+var force
+
+func _ready():
+	l0 = ($a2.position - $a1.position).length() * 0.8
 
 func _process(dt):
 	queue_redraw()
@@ -14,6 +21,7 @@ func _draw():
 	#print(side)
 	if rockpos == null:
 		draw_line($a1.position, $a2.position, Color(0, 0, 0))
+		force = Vector2.ZERO
 		return
 	var vec = ($a2.position - $a1.position).normalized()
 	var perpvec = Vector2(vec.y, -vec.x)
@@ -39,6 +47,7 @@ func _draw():
 		else:
 			#anim
 			vibtick -= curdt
+		force = Vector2.ZERO
 	else:
 		var tanp1 = tanpoints($a1.position, rockpos, rockrad)
 		var tanp2 = tanpoints($a2.position, rockpos, rockrad)
@@ -105,8 +114,16 @@ func _draw():
 					p2 = tanp2[1]
 		
 		draw_line($a1.position, p1, Color(0, 0, 0), 3)
+		draw_line(p1, p2, Color(0, 0, 0), 3)
 		draw_line($a2.position, p2, Color(0, 0, 0), 3)
-
+		
+		# Force calculation
+		var v1 = $a1.position - p1
+		var v2 = $a2.position - p2
+		var unit_dir = (v1.normalized() + v2.normalized()).normalized()
+		var l = v1.length() + v2.length() + (p2 - p1).length()
+		force = unit_dir * (l - l0) * k
+		
 func update_rock(r):
 	rockpos = r.position
 	rockrad = r.rad * 0.9
@@ -122,3 +139,6 @@ func tanpoints(p1, p2, r):
 
 func vecang(v):
 	return atan2(v.y, v.x)
+	
+func get_force():
+	return force
