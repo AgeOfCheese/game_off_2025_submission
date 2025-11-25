@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://cd35e8d2fn3ua"]
+[gd_scene load_steps=13 format=3 uid="uid://cd35e8d2fn3ua"]
 
 [ext_resource type="Script" uid="uid://0xq33eqohuog" path="res://game.gd" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://4pqund3nukl7" path="res://scenes/sling.tscn" id="2_e2o6t"]
 [ext_resource type="Shader" uid="uid://ruqkgvc4bx5s" path="res://water.gdshader" id="2_fc0e3"]
+[ext_resource type="Shader" uid="uid://h42teciswj01" path="res://ripple.gdshader" id="3_7jktm"]
 [ext_resource type="Texture2D" uid="uid://cwfrs8qxhvwos" path="res://duck.png" id="3_feb5d"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7jktm"]
@@ -24,6 +25,12 @@ frequency = 0.008
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_eow3j"]
 noise = SubResource("FastNoiseLite_ryrav")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ryrav"]
+shader = ExtResource("3_7jktm")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_eow3j"]
+viewport_path = NodePath("water")
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fc0e3"]
 size = Vector2(82, 83)
 
@@ -33,7 +40,9 @@ size = Vector2(20, 354)
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_uwrxv")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="water" type="SubViewport" parent="."]
+
+[node name="CausticEffect" type="Sprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_7jktm")
@@ -44,6 +53,12 @@ centered = false
 offset = Vector2(-1280, 0)
 region_enabled = true
 region_rect = Rect2(0, 0, 1280, 720)
+
+[node name="RippleEffect" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_ryrav")
+position = Vector2(576, 327.5)
+scale = Vector2(2.2460938, 1.2832031)
+texture = SubResource("ViewportTexture_eow3j")
 
 [node name="sling" parent="." instance=ExtResource("2_e2o6t")]
 
