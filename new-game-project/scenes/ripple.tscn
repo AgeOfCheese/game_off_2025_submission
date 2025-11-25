@@ -9,3 +9,5 @@ script = ExtResource("1_nd7wn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_soc2n")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
