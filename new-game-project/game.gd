@@ -21,5 +21,5 @@ func _process(dt):
 			if not r1.flying:
 				r1.start_launch()
 		r1.apply_force(f)
-	if r1.y < 0:
+	if r1.y < -100:
 		r1.end_launch()
