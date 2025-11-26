@@ -5,10 +5,10 @@ class_name Rock
 const k = 0.01
 const kpick = 0.011
 const density = 10
-const gravity = 0.7
+const gravity = 0.5
 const theta = 10
-const hcam = 100
-const iters = 20
+const hcam = 500
+const iters = 40
 
 var rad
 var picked

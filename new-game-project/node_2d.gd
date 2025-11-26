@@ -1,7 +1,7 @@
 extends Node2D
 
 var l0
-const k = 100
+const k = 25
 
 var rockpos = null
 var rockrad = 10
