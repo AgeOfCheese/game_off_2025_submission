@@ -27,3 +27,7 @@ func _process(dt):
 		add_child(new_ripple)
 
 	
+
+
+func _on_restart_button_pressed() -> void:
+	pass # Replace with function body.

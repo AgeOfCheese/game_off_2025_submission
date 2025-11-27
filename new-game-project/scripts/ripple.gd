@@ -2,7 +2,7 @@ extends Area2D
 
 @export var speed = 100
 @export var push_force = 7500
-@export var max_radius = 350
+@export var max_radius = 200
 @export var friction = 0.1
 
 @onready var collision_shape_2d = $CollisionShape2D

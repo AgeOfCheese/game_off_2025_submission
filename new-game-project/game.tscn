@@ -1,10 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://cd35e8d2fn3ua"]
+[gd_scene load_steps=16 format=3 uid="uid://cd35e8d2fn3ua"]
 
 [ext_resource type="Script" uid="uid://0xq33eqohuog" path="res://game.gd" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://4pqund3nukl7" path="res://scenes/sling.tscn" id="2_e2o6t"]
 [ext_resource type="Shader" uid="uid://ruqkgvc4bx5s" path="res://water.gdshader" id="2_fc0e3"]
+[ext_resource type="Texture2D" uid="uid://b27q2tjyd1wjl" path="res://bathtub.png" id="2_ryrav"]
 [ext_resource type="Shader" uid="uid://h42teciswj01" path="res://ripple.gdshader" id="3_7jktm"]
 [ext_resource type="Texture2D" uid="uid://cwfrs8qxhvwos" path="res://duck.png" id="3_feb5d"]
+[ext_resource type="PackedScene" uid="uid://ccwgqcjoio4ji" path="res://scenes/seamine.tscn" id="7_eow3j"]
+[ext_resource type="Script" uid="uid://btf3ol6jp4uou" path="res://game_over.gd" id="8_j5wjh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7jktm"]
 shader = ExtResource("2_fc0e3")
@@ -29,7 +32,7 @@ noise = SubResource("FastNoiseLite_ryrav")
 shader = ExtResource("3_7jktm")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_eow3j"]
-viewport_path = NodePath("water")
+viewport_path = NodePath("Node2D/water")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fc0e3"]
 size = Vector2(82, 83)
@@ -40,37 +43,50 @@ size = Vector2(20, 354)
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_uwrxv")
 
-[node name="water" type="SubViewport" parent="."]
+[node name="Bathtub" type="Sprite2D" parent="."]
+position = Vector2(573.3163, 275.7201)
+scale = Vector2(-17.98322, 18.196247)
+texture = ExtResource("2_ryrav")
 
-[node name="CausticEffect" type="Sprite2D" parent="."]
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(93.99998, 51.999996)
+scale = Vector2(0.85, 0.85)
+
+[node name="CausticEffect" type="Sprite2D" parent="Node2D"]
 texture_filter = 1
 texture_repeat = 2
 material = SubResource("ShaderMaterial_7jktm")
 position = Vector2(2, 0)
-scale = Vector2(-0.898628, 0.9004202)
+rotation = 3.1415925
+scale = Vector2(0.898628, -0.9004202)
 texture = SubResource("NoiseTexture2D_eow3j")
 centered = false
 offset = Vector2(-1280, 0)
 region_enabled = true
 region_rect = Rect2(0, 0, 1280, 720)
 
-[node name="RippleEffect" type="Sprite2D" parent="."]
+[node name="RippleEffect" type="Sprite2D" parent="Node2D"]
+visible = false
 material = SubResource("ShaderMaterial_ryrav")
 position = Vector2(576, 327.5)
 scale = Vector2(2.2460938, 1.2832031)
 texture = SubResource("ViewportTexture_eow3j")
 
-[node name="sling" parent="." instance=ExtResource("2_e2o6t")]
+[node name="water" type="SubViewport" parent="Node2D"]
 
-[node name="RigidBody2D" type="RigidBody2D" parent="."]
+[node name="sling" parent="." instance=ExtResource("2_e2o6t")]
+position = Vector2(32, 16)
+
+[node name="Duck" type="RigidBody2D" parent="."]
+position = Vector2(88, 48)
 gravity_scale = 0.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Duck"]
 position = Vector2(237, 308)
 scale = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_fc0e3")
 
-[node name="Icon" type="Sprite2D" parent="RigidBody2D/CollisionShape2D"]
+[node name="Icon" type="Sprite2D" parent="Duck/CollisionShape2D"]
 position = Vector2(0, 1)
 scale = Vector2(3, 3)
 texture = ExtResource("3_feb5d")
@@ -81,3 +97,31 @@ position = Vector2(24, 272)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_feb5d")
+
+[node name="Seamine" parent="." instance=ExtResource("7_eow3j")]
+position = Vector2(574, 249)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Game Over" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8_j5wjh")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Game Over"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(1, 0, 0, 0.2627451)
+
+[node name="Restart Button" type="Button" parent="CanvasLayer/Game Over/ColorRect"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[connection signal="pressed" from="CanvasLayer/Game Over/ColorRect/Restart Button" to="." method="_on_restart_button_pressed"]
